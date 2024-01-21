@@ -36,7 +36,7 @@ If you use [straight](https://github.com/radian-software/straight.el), just repl
 
 ## Configuration
 
-Set `scihub-download-directory` to the directory you would like the PDFs to be downloaded.
+Set `scihub-download-directory` to the directory you would like the files to be downloaded.
 
 ## Usage
 
