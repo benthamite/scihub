@@ -40,12 +40,12 @@
 
 ;;;; Functions
 
-(defun scihub-download ()
+(defun scihub-download (&optional doi)
   "Download DOI from SciHub."
   (interactive)
   (scihub-check-executable-exists)
   (scihub-check-subdirectory-exists)
-  (let* ((doi (scihub-read-doi))
+  (let* ((doi (or doi (scihub-read-doi)))
 	 (default-directory scihub-download-directory)
 	 (process-name "scidownl-process")
 	 (command (format "\"%s\" download --doi %s" (scihub-get-executable) doi))
