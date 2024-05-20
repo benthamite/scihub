@@ -47,6 +47,11 @@
 
 ;;;; Functions
 
+(defun scihub-command (args)
+  "Run `scidownl' with ARGS."
+  (scihub-ensure-executable-exists)
+  (format "\"%s\" %s" (scihub-get-executable) args))
+
 (defun scihub-download (&optional doi)
   "Download DOI from SciHub."
   (interactive)
@@ -55,7 +60,7 @@
   (let* ((doi (or doi (scihub-read-doi)))
 	 (default-directory scihub-download-directory)
 	 (process-name "scidownl-process")
-	 (command (format "\"%s\" download --doi %s" (scihub-get-executable) doi))
+	 (command (scihub-command (format "download --doi %s" doi)))
 	 (buffer (generate-new-buffer "*scihub-download-output*"))
 	 (proc (start-process-shell-command process-name buffer command))
 	 download-successful)
@@ -74,8 +79,7 @@
   "Update the list of SciHub servers."
   (interactive)
   (scihub-ensure-executable-exists)
-  (when-let ((output (shell-command-to-string
-		      (format "%s domain.update" (scihub-get-executable)))))
+  (when-let ((output (shell-command-to-string (scihub-command "domain.update"))))
     (message output)))
 
 (defun scihub-get-executable ()
