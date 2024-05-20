@@ -64,6 +64,14 @@
 				(message "File downloaded successfully to `%s'." scihub-download-directory)
 			      (message "File download failed."))))))
 
+(defun scihub-update-server-list ()
+  "Update the list of SciHub servers."
+  (interactive)
+  (scihub-ensure-executable-exists)
+  (when-let ((output (shell-command-to-string
+		      (format "%s domain.update" (scihub-get-executable)))))
+    (message output)))
+
 (defun scihub-get-executable ()
   "Get `scihub-scidownl' executable."
   (executable-find "scidownl"))
