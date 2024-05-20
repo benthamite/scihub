@@ -27,6 +27,12 @@
 
 ;;; Code:
 
+;;;; Variables
+
+(defconst scihub-doi-regexp
+  "\\(10\\.[0-9]\\{4,9\\}\\(/\\)[-._;()/:A-Z0-9]+\\)$"
+  "Regular expression that matches a DOI.")
+
 ;;;; User options
 
 (defgroup scihub ()
@@ -104,7 +110,7 @@ empty, signal an error."
 
 (defun scihub-is-doi-p (string)
   "Return t if STRING is a valid DOI."
-  (not (null (string-match "\\(10\\.[0-9]\\{4,9\\}\\(/\\)[-._;()/:A-Z0-9]+\\)$" string))))
+  (not (null (string-match scihub-doi-regexp string))))
 
 (provide 'scihub)
 ;;; scihub.el ends here
