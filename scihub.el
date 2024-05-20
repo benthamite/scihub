@@ -44,8 +44,8 @@
 (defun scihub-download (&optional doi)
   "Download DOI from SciHub."
   (interactive)
-  (scihub-check-executable-exists)
-  (scihub-check-subdirectory-exists)
+  (scihub-ensure-executable-exists)
+  (scihub-ensure-subdirectory-exists)
   (let* ((doi (or doi (scihub-read-doi)))
 	 (default-directory scihub-download-directory)
 	 (process-name "scidownl-process")
@@ -68,12 +68,12 @@
   "Get `scihub-scidownl' executable."
   (executable-find "scidownl"))
 
-(defun scihub-check-executable-exists ()
+(defun scihub-ensure-executable-exists ()
   "Check if `scihub-scidownl' executable exists and signal an error if it doesn’t."
   (unless (scihub-get-executable)
     (user-error "`scidownl' not found; please install it (https://github.com/Tishacy/SciDownl)")))
 
-(defun scihub-check-subdirectory-exists ()
+(defun scihub-ensure-subdirectory-exists ()
   "Check if `scihub-download-directory' exists.
 If directory doesn’t exist, ask the user whether to create it. If directory is
 empty, signal an error."
