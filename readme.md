@@ -38,6 +38,8 @@ If you use [straight](https://github.com/radian-software/straight.el), just repl
 
 Set `scihub-download-directory` to the directory you would like the files to be downloaded.
 
+Run `scihub-update-server-list` to update the list of available SciHub servers.
+
 ## Usage
 
 `M-x scihub-download`.
