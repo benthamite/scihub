@@ -47,15 +47,41 @@
 
 ;;;; Functions
 
+;;;;; Command helpers
+
+(defun scihub-get-executable ()
+  "Get `scihub-scidownl' executable."
+  (executable-find "scidownl"))
+
 (defun scihub-command (args)
   "Run `scidownl' with ARGS."
   (scihub-ensure-executable-exists)
   (format "\"%s\" %s" (scihub-get-executable) args))
 
+;;;;; Ensure funs
+
+(defun scihub-ensure-executable-exists ()
+  "Check if `scihub-scidownl' executable exists and signal an error if it doesn’t."
+  (unless (scihub-get-executable)
+    (user-error "`scidownl' not found; please install it (https://github.com/Tishacy/SciDownl)")))
+
+(defun scihub-ensure-subdirectory-exists ()
+  "Check if `scihub-download-directory' exists.
+If directory doesn’t exist, ask the user whether to create it. If directory is
+empty, signal an error."
+  (when (string-empty-p scihub-download-directory)
+    (user-error "Directory `%s' is empty" scihub-download-directory))
+  (unless (file-exists-p scihub-download-directory)
+    (if (y-or-n-p
+	 (format "Directory `%s' does not exist; create it?" scihub-download-directory))
+	(make-directory scihub-download-directory t)
+      (user-error "Aborted"))))
+
+;;;;; Commands
+
 (defun scihub-download (&optional doi)
   "Download DOI from SciHub."
   (interactive)
-  (scihub-ensure-executable-exists)
   (scihub-ensure-subdirectory-exists)
   (let* ((doi (or doi (scihub-read-doi)))
 	 (default-directory scihub-download-directory)
@@ -78,30 +104,14 @@
 (defun scihub-update-server-list ()
   "Update the list of SciHub servers."
   (interactive)
-  (scihub-ensure-executable-exists)
   (when-let ((output (shell-command-to-string (scihub-command "domain.update"))))
     (message output)))
 
-(defun scihub-get-executable ()
-  "Get `scihub-scidownl' executable."
-  (executable-find "scidownl"))
+;;;;; Read DOI
 
-(defun scihub-ensure-executable-exists ()
-  "Check if `scihub-scidownl' executable exists and signal an error if it doesn’t."
-  (unless (scihub-get-executable)
-    (user-error "`scidownl' not found; please install it (https://github.com/Tishacy/SciDownl)")))
-
-(defun scihub-ensure-subdirectory-exists ()
-  "Check if `scihub-download-directory' exists.
-If directory doesn’t exist, ask the user whether to create it. If directory is
-empty, signal an error."
-  (when (string-empty-p scihub-download-directory)
-    (user-error "Directory `%s' is empty" scihub-download-directory))
-  (unless (file-exists-p scihub-download-directory)
-    (if (y-or-n-p
-	 (format "Directory `%s' does not exist; create it?" scihub-download-directory))
-	(make-directory scihub-download-directory t)
-      (user-error "Aborted"))))
+(defun scihub-is-doi-p (string)
+  "Return t if STRING is a valid DOI."
+  (not (null (string-match scihub-doi-regexp string))))
 
 (defun scihub-read-doi ()
   "Read DOI from user input."
@@ -110,10 +120,6 @@ empty, signal an error."
 	    (y-or-n-p (format "`%s' does not look like a valid DOI; proceed anyway?" doi)))
 	doi
       (user-error "Aborted"))))
-
-(defun scihub-is-doi-p (string)
-  "Return t if STRING is a valid DOI."
-  (not (null (string-match scihub-doi-regexp string))))
 
 (provide 'scihub)
 ;;; scihub.el ends here
