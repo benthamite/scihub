@@ -28,7 +28,7 @@ If you use the [elpaca](https://github.com/progfolio/elpaca) package manager, yo
 (use-package scihub
   :elpaca (scihub
            :host github
-	   :repo "benthamite/scihub")
+           :repo "benthamite/scihub")
   :demand t)
 ```
 
