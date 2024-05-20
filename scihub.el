@@ -33,7 +33,8 @@
   "Download files from SciHub."
   :group 'emacs)
 
-(defcustom scihub-download-directory "~/Downloads/"
+(defcustom scihub-download-directory
+  (expand-file-name "~/Downloads/")
   "Directory where downloaded files are saved."
   :type 'directory
   :group 'scihub)
