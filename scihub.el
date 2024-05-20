@@ -106,11 +106,10 @@ empty, signal an error."
 (defun scihub-read-doi ()
   "Read DOI from user input."
   (let ((doi (read-string "DOI: ")))
-    (if (scihub-is-doi-p doi)
+    (if (or (scihub-is-doi-p doi)
+	    (y-or-n-p (format "`%s' does not look like a valid DOI; proceed anyway?" doi)))
 	doi
-      (if (y-or-n-p (format "`%s' does not look like a valid DOI; proceed anyway?" doi))
-	  doi
-	(user-error "Aborted")))))
+      (user-error "Aborted"))))
 
 (defun scihub-is-doi-p (string)
   "Return t if STRING is a valid DOI."
