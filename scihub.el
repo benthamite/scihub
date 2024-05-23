@@ -79,27 +79,39 @@ empty, signal an error."
 
 ;;;;; Commands
 
-(defun scihub-download (&optional doi)
+(defun scihub-download (&optional doi callback)
   "Download DOI from SciHub."
   (interactive)
   (scihub-ensure-subdirectory-exists)
   (let* ((doi (or doi (scihub-read-doi)))
+	 (bibtex-key (pcase major-mode
+		       ('bibtex-mode (bibtex-extras-get-key))
+		       ((or 'ebib-entry-mode 'ebib-index-mode)
+			(ebib-extras-get-field "=key="))))
 	 (default-directory scihub-download-directory)
 	 (process-name "scidownl-process")
 	 (command (scihub-command (format "download --doi %s" doi)))
 	 (buffer (generate-new-buffer "*scihub-download-output*"))
 	 (proc (start-process-shell-command process-name buffer command))
-	 download-successful)
+	 download-successful file-path)
     (message "Trying to download DOI `%s'..." doi)
     (set-process-filter proc
-			(lambda (process output)
+			(lambda (_process output)
 			  (when (string-match-p "Successfully download the url" output)
-			    (setq download-successful t))))
+			    (setq download-successful t)
+			    (setq file-path (scihub-get-pdf-filename output)))))
     (set-process-sentinel proc
-			  (lambda (process signal)
+			  (lambda (_process signal)
 			    (if (and (string= signal "finished\n") download-successful)
-				(message "File downloaded successfully to `%s'." scihub-download-directory)
-			      (message "File download failed."))))))
+				(if callback
+				    (funcall callback file-path bibtex-key)
+				  (message "File downloaded successfully to `%s'." scihub-download-directory))
+			      (user-error "File download failed"))))))
+
+(defun scihub-get-pdf-filename (output)
+  "Get the filename of the downloaded PDF from the shell command OUTPUT."
+  (string-match "Successfully download the url to: \\(.*?\\.pdf\\)" output)
+  (match-string 1 output))
 
 (defun scihub-update-server-list ()
   "Update the list of SciHub servers."
