@@ -95,18 +95,19 @@ It receives the downloaded file path and the BibTeX key as arguments."
 	 (command (scihub-command (format "download --doi %s" doi)))
 	 (buffer (generate-new-buffer "*scihub-download-output*"))
 	 (proc (start-process-shell-command process-name buffer command))
-	 download-successful file-path)
+	 download-successful filename)
     (message "Trying to download DOI `%s'..." doi)
     (set-process-filter proc
 			(lambda (_process output)
 			  (when (string-match-p "Successfully download the url" output)
 			    (setq download-successful t)
-			    (setq file-path (scihub-get-pdf-filename output)))))
+			    (setq filename (scihub-get-pdf-filename output)))))
     (set-process-sentinel proc
 			  (lambda (_process signal)
 			    (if (and (string= signal "finished\n") download-successful)
 				(if callback
-				    (funcall callback file-path bibtex-key)
+				    (funcall callback
+					     (file-name-concat scihub-download-directory filename) bibtex-key)
 				  (message "File downloaded successfully to `%s'." scihub-download-directory))
 			      (user-error "File download failed"))))))
 
