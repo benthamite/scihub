@@ -80,7 +80,9 @@ empty, signal an error."
 ;;;;; Commands
 
 (defun scihub-download (&optional doi callback)
-  "Download DOI from SciHub."
+  "Download DOI from SciHub.
+CALLBACK is a callback function that is called after the download is complete.
+It receives the downloaded file path and the BibTeX key as arguments."
   (interactive)
   (scihub-ensure-subdirectory-exists)
   (let* ((doi (or doi (scihub-read-doi)))
