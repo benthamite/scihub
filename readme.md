@@ -26,13 +26,13 @@ If you use the [elpaca](https://github.com/progfolio/elpaca) package manager, yo
 
 ``` emacs-lisp
 (use-package scihub
-  :elpaca (scihub
+  :ensure (scihub
            :host github
            :repo "benthamite/scihub")
   :demand t)
 ```
 
-If you use [straight](https://github.com/radian-software/straight.el), just replace `:elpaca` with `:straight` in the formula above.
+If you use [straight](https://github.com/radian-software/straight.el), just replace `:ensure` with `:straight` in the formula above.
 
 ## Configuration
 
