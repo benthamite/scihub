@@ -10,29 +10,33 @@ Basic [SciDownl](https://pypi.org/project/scidownl/) wrapper enabling the downlo
 
 ## Installation
 
-### Manual installation
+Clone this repository to your Emacs load path and add this to your `init.el` file:
 
-Clone this repository and add this to your `init.el` file:
-
-``` emacs-lisp
-(add-to-list 'load-path "path/to/internet-archive")
+```emacs-lisp
+(require 'scihub)
 ```
 
-where `"path/to/internet-archive"` is the path to the local repository you just cloned.
+### With `use-pacakge`
 
-### Elpaca/Straight
+If you use the [elpaca](https://github.com/progfolio/elpaca) package manager, add this your `init.el` file:
 
-If you use the [elpaca](https://github.com/progfolio/elpaca) package manager, you just need to add this your `init.el` file:
-
-``` emacs-lisp
+```emacs-lisp
+;; with vc
 (use-package scihub
-  :ensure (scihub
-           :host github
-           :repo "benthamite/scihub")
-  :demand t)
-```
+  :vc (:url "https://github.com/benthamite/scihub"))
 
-If you use [straight](https://github.com/radian-software/straight.el), just replace `:ensure` with `:straight` in the formula above.
+;; with elpaca
+(use-package scihub
+  :ensure (:host github :repo "benthamite/scihub"))
+
+;; with straight
+(use-package scihub
+  :straight (:host github :repo "benthamite/scihub"))
+
+;; with quelpa
+(use-package scihub
+  :quelpa (scihub :fetcher github :repo "benthamite/scihub"))
+```
 
 ## Configuration
 
