@@ -79,6 +79,7 @@ empty, signal an error."
 
 ;;;;; Commands
 
+;;;###autoload
 (defun scihub-download (&optional doi callback)
   "Download DOI from SciHub.
 CALLBACK is a callback function that is called after the download is complete.
