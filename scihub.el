@@ -88,9 +88,9 @@ It receives the downloaded file path and the BibTeX key as arguments."
   (scihub-ensure-subdirectory-exists)
   (let* ((doi (or doi (scihub-read-doi)))
 	 (bibtex-key (pcase major-mode
-		       ('bibtex-mode (bibtex-extras-get-key))
+		       ('bibtex-mode (scihub-get-bibtex-key))
 		       ((or 'ebib-entry-mode 'ebib-index-mode)
-			(ebib-extras-get-field "=key="))))
+			(scihub-get-ebib-key))))
 	 (default-directory scihub-download-directory)
 	 (process-name "scidownl-process")
 	 (command (scihub-command (format "download --doi %s" doi)))
@@ -111,6 +111,27 @@ It receives the downloaded file path and the BibTeX key as arguments."
 					     (file-name-concat scihub-download-directory filename) bibtex-key)
 				  (message "File downloaded successfully to `%s'." scihub-download-directory))
 			      (user-error "File download failed"))))))
+
+(autoload 'bibtex-narrow-to-entry "bibtex")
+(defun scihub-get-bibtex-key ()
+  "Return the key of the current BibTeX entry."
+  (save-excursion
+    (save-restriction
+      (bibtex-narrow-to-entry)
+      (goto-char (point-min))
+      (if (re-search-forward "@\\w+{\\([^,]+\\),")
+          (match-string-no-properties 1)
+        (user-error "Not on a BibTeX entry")))))
+
+(defvar ebib--cur-db)
+(autoload 'ebib-get-field-value "ebib-utils")
+(declare-function ebib--get-key-at-point "ebib")
+(defun scihub-get-ebib-key ()
+  "Get the key value of the entry at point."
+  (when-let* ((value (ebib-get-field-value "=key="
+					   (ebib--get-key-at-point)
+					   ebib--cur-db t t t)))
+    (replace-regexp-in-string "[\n\t ]+" " " value)))
 
 (defun scihub-get-pdf-filename (output)
   "Get the filename of the downloaded PDF from the shell command OUTPUT."
