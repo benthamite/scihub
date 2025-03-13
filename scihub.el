@@ -409,12 +409,9 @@ If INITIAL-INPUT is non-nil, use it as the initial input."
 	doi
       (user-error "Aborted"))))
 
-(declare-function bibtex-beginning-of-entry "bibtex" ())
-(declare-function bibtex-autokey-get-field "bibtex" (field))
 (declare-function ebib--get-key-at-point "ebib" ())
 (declare-function ebib-get-field-value "ebib-utils"
                   (field key db &optional noerror unbraced xref))
-
 (defun scihub-get-doi ()
   "Return the DOI in the current buffer, if found."
   (pcase major-mode
