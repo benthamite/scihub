@@ -403,7 +403,12 @@ RETRY-COUNT permits. BIBTEX-KEY is passed to CALLBACK on success."
 (defun scihub-read-doi (&optional initial-input)
   "Read DOI from user input.
 If INITIAL-INPUT is non-nil, use it as the initial input."
-  (let ((doi (read-string "DOI: " initial-input 'scihub-history)))
+  (let* ((doi-history (mapcar (lambda (item) (plist-get item :doi)) scihub-history))
+         (doi (read-string "DOI: " initial-input 'doi-history)))
+    ;; Update history with extracted DOIs for future calls
+    (setq scihub-history (delete-dups
+                          (append doi-history
+                                  (list (list :doi doi :time (current-time-string))))))
     (if (or (scihub-is-doi-p doi)
 	    (y-or-n-p (format "`%s' does not look like a valid DOI; proceed anyway?" doi)))
 	doi
