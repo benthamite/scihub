@@ -1,0 +1,83 @@
+#+title:scihub
+
+Download academic papers from SciHub directly within Emacs.
+
+** Overview
+
+=scihub.el= provides an interface to download academic papers from SciHub using their DOI or other identifiers. This package works with [[https://github.com/Tishacy/SciDownl][scidownl]], a command-line tool for downloading papers from SciHub.
+
+** Features
+
+- Download papers by DOI with =scihub-download=
+- Batch download multiple papers with =scihub-batch-download=
+- Search for papers by title with =scihub-search-by-title=
+- Smart filename generation based on metadata
+- Works with BibTeX and Ebib
+- Download history management
+- Automatic mirror selection and caching for faster downloads
+
+** Installation
+Clone this repository to your Emacs load path and add this to your =init.el= file:
+
+#+begin_src emacs-lisp
+(require 'scihub)
+#+end_src
+
+*** With =use-pacakge=
+If you use the [[https://github.com/progfolio/elpaca][elpaca]] package manager, add this your =init.el= file:
+
+#+begin_src emacs-lisp
+;; with vc
+(use-package scihub
+  :vc (:url "https://github.com/benthamite/scihub"))
+
+;; with elpaca
+(use-package scihub
+  :ensure (:host github :repo "benthamite/scihub"))
+
+;; with straight
+(use-package scihub
+  :straight (:host github :repo "benthamite/scihub"))
+
+;; with quelpa
+(use-package scihub
+  :quelpa (scihub :fetcher github :repo "benthamite/scihub"))
+#+end_src
+
+** Configuration
+
+Customize options using =M-x customize-group RET scihub RET= or directly in your init file:
+
+#+begin_src emacs-lisp
+;; Directory to save downloaded papers
+(setq scihub-download-directory "~/Documents/Papers/")
+
+;; Format for downloaded filenames
+;; Available placeholders: %d (DOI), %a (author), %y (year), %t (title)
+(setq scihub-filename-format "%a_%y_%d")
+
+;; Automatically open PDFs after download
+(setq scihub-open-after-download t)
+
+;; Number of retries when download fails
+(setq scihub-retry-count 5)
+#+end_src
+
+** Usage
+
+*** Basic Commands
+
+- =M-x scihub-download=: Download a paper by DOI
+- =M-x scihub-batch-download=: Download multiple papers at once
+- =M-x scihub-search-by-title=: Search for a paper by title and download it
+- =M-x scihub-view-history=: View download history
+- =M-x scihub-clear-history=: Clear download history
+- =M-x scihub-update-server-list=: Update the list of SciHub servers
+
+*** Integration with BibTeX and Ebib
+
+When your cursor is positioned on a BibTeX entry (in =bibtex-mode=) or an Ebib entry (in =ebib-entry-mode= or =ebib-index-mode=), =scihub-download= will automatically extract the DOI from the entry and use it for the download.
+
+** Contributing
+
+Contributions are welcome. Feel free to submit a pull request.
