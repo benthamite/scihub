@@ -16,6 +16,14 @@ Download academic papers from SciHub directly within Emacs.
 - Download history management
 - Automatic mirror selection and caching for faster downloads
 
+** Prerequisites
+
+This package requires the external tool =scidownl=. You can install it using pip:
+
+#+begin_src bash
+pip install scidownl
+#+end_src
+
 ** Installation
 Clone this repository to your Emacs load path and add this to your =init.el= file:
 
