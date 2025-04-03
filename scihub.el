@@ -1,4 +1,4 @@
-;;; scihub.el --- Download files from SciHub -*- lexical-binding: t; fill-column: 80 -*-
+;;; scihub.el --- Download files from SciHub -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2025
 
